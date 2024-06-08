@@ -12,5 +12,17 @@ DeepCor is developed on a linux system.
 ### Python Dependencies
 The file named requirements.txt contains the required python pacakges. In addition, BrainIAK is required to run the realistic simulations and here is the instructions from their pages to install the package: https://brainiak.org/docs/installation.html.
 
+### Web Application
+The example code is prototyped and documented in the Jupyter Notebook.
+
+## Installation Guide
+Here is the sample command to install packages into a python environment:
+
+
+  cd path-to-directory-contains-deepcor-source-code
+  python -m venv deepcor
+  source deepcor/bin/activate
+  pip install -r requirements.txt
+
 
 
