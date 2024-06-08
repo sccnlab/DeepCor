@@ -25,6 +25,7 @@ pip install -r requirements.txt
 ```
 
 ## Reproduction Instructions
-In order to reproduce the results, 
+Running the jupyter notebook under the folder Simple_simulated_dataset will simulate the dataset using the trigometric functions and reproduce the training results.
 
+To run the Realistic_data_simulation jupter notebooks, BrainIAK package is needed to be installed and 
 
