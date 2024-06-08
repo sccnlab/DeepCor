@@ -29,5 +29,6 @@ Running the jupyter notebook under the folder Simple_simulated_dataset will simu
 
 To run the Realistic_data_simulation jupter notebooks, BrainIAK package is needed to be installed and the brain masks from the first participant in the Study Forest dataset are needed be downloaded from https://www.studyforrest.org/. Replace the filepath_func, filepath_gm, filepath_wm, and filepath_csf variables in the source code to be the path to the fMRI of that participants as well as probability maps of grap matter, white matter and cerebrospinal fluid respectively. 
 
+The functional_connectivity_analysis is ran on 200 participants from ABIDE I dataset ((http ://fcon1000.projects.nitrc.org/) and the data are preprocessed. The 
 
 
