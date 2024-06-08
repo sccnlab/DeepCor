@@ -23,6 +23,7 @@ python -m venv deepcor
 source deepcor/bin/activate
 pip install -r requirements.txt
 ```
+The installation takes less than three minutes.
 
 ## Reproduction Instructions
 Running the jupyter notebook under the folder Simple_simulated_dataset will simulate the dataset using the trigometric functions and reproduce the training results.
