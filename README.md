@@ -17,12 +17,12 @@ The example code is prototyped and documented in the Jupyter Notebook.
 
 ## Installation Guide
 Here is the sample command to install packages into a python environment:
-
-
-  cd path-to-directory-contains-deepcor-source-code
-  python -m venv deepcor
-  source deepcor/bin/activate
-  pip install -r requirements.txt
+```
+cd path-to-directory-contains-deepcor-source-code
+python -m venv deepcor
+source deepcor/bin/activate
+pip install -r requirements.txt
+```
 
 
 
