@@ -35,6 +35,18 @@ The functional_connectivity_analysis is ran on 200 participants from ABIDE I dat
 ## Demo
 Here is a quick demo illustrating how to use DeepCor on your own data. Make sure that all the packages have been installed and model.py and utils.py are downloaded in the same folder as where the demo runs. Moreover, since the purpose of this demo is to denoise the gray matter in the whole brain, we didn't include the train-validation-test step here for your convenience. Again, the preprocessed fMRI data, the anatomical masks, and the probability maps for gm, wm, and csf are required to run the demo.
 
+### Step 0 Import packages and functions
+```
+import os
+import nibabel as nib
+import numpy as np
+from utils import remove_std0, Scaler, TrainDataset, DenoiseDataset
+import torch
+import torch.optim as optim
+from typing import TypeVar
+from model import cVAE
+```
+
 ### Step 1 Load masks and extract the fMRI signals for ROI and RONI
 Define the file path to access each masks and the output file path.
 ```
@@ -84,7 +96,104 @@ func_gm = func_reshaped[gm_reshaped,:] # these are the functional data in gray m
 func_cf = func_reshaped[cf_reshaped,:] # these are the functional data in the regions of no interest
 ```
 
-
+### Step 2 Normalize and load the data
+Normalization of Data
 ```
+func_gm, gm_valid_mask = remove_std0(func_gm)
+func_cf, _ = remove_std0(func_cf)
+obs_scale = Scaler(func_gm)
+obs_list = obs_scale.transform(func_gm)
+noi_scale = Scaler(func_cf)
+noi_list = noi_scale.transform(func_cf)
 ```
 
+Dataloading
+```
+train_inputs = TrainDataset(obs_list,noi_list)
+train_in = torch.utils.data.DataLoader(train_inputs, batch_size=64,
+                                             shuffle=True, num_workers=1)
+```
+
+### Step 3 Train the model
+Define the model and the optimizer
+```
+Tensor = TypeVar('torch.tensor')
+model = cVAE(1,func_cf.shape[1],8)
+optimizer = optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0)
+```
+Train and save the model
+```device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+model.to(device)
+batch_size = 64
+epoch_num = 20
+running_loss_L = []
+running_recons_L = []
+running_KLD_L = []
+
+for epoch in range(epoch_num):  # loop over the dataset multiple times    
+    running_loss = 0.0
+    running_reconstruction_loss = 0.0
+    running_KLD = 0.0
+
+    # Iterate over data.
+    dataloader_iter_in = iter(train_in)
+    for i in range(len(train_in)):
+        inputs_gm,inputs_cf = next(dataloader_iter_in)
+
+        inputs_gm = inputs_gm.unsqueeze(1).float().to(device)
+        inputs_cf = inputs_cf.unsqueeze(1).float().to(device)
+        # zero the parameter gradients
+        optimizer.zero_grad()
+        # encoder + decoder
+        [outputs_gm, inputs_gm, tg_mu_z, tg_log_var_z, tg_mu_s, tg_log_var_s,tg_z,tg_x] = model.forward_tg(inputs_gm)
+        [outputs_cf, inputs_cf, bg_mu_s, bg_log_var_s] = model.forward_bg(inputs_cf)
+        outputs = torch.concat((outputs_gm,outputs_cf),1)
+        loss = model.loss_function(outputs_gm, inputs_gm, tg_mu_z, tg_log_var_z, tg_mu_s, tg_log_var_s,tg_z,tg_x, outputs_cf, inputs_cf, bg_mu_s, bg_log_var_s)
+        # backward + optimize
+        loss['loss'].backward()
+        optimizer.step()
+        running_loss += loss['loss']
+        running_reconstruction_loss += loss['Reconstruction_Loss']
+        running_KLD += loss['KLD']   
+
+    epoch_running_loss = running_loss / (len(train_in)*2)
+    epoch_running_reconstruction_loss = running_reconstruction_loss / (len(train_in)*2)
+    epoch_running_KLD = running_KLD / (len(train_in)*2)
+    running_loss_L.append(epoch_running_loss.cpu().detach().numpy())
+    running_recons_L.append(epoch_running_reconstruction_loss.cpu().detach().numpy())
+    running_KLD_L.append(epoch_running_KLD.cpu().detach().numpy())
+    
+torch.save(model.state_dict(), filepath_out + '/model')
+```
+
+### Step 4 Use the trained model to denoise the ROI signals
+Denoise the ROI signals
+```
+denoise_inputs = DenoiseDataset(obs_list)
+denoise_in = torch.utils.data.DataLoader(denoise_inputs, batch_size=64,
+                                              shuffle=False, num_workers=1)
+
+denoise_iter_in = iter(denoise_in)
+for i in range(len(denoise_in)):
+    inputs = next(denoise_iter_in)
+    inputs = inputs.unsqueeze(1).float().to(device)
+    func_output = model.generate(inputs)
+    func_output_np = func_output.squeeze().cpu().detach().numpy()
+    if i == 0:
+        outputs_all = func_output_np 
+    else:
+        outputs_all = np.concatenate((outputs_all,func_output_np), axis = 0)
+```
+
+Map the output back to the brain masks and save
+```
+new_matrix = np.zeros_like(func_values)
+new_matrix_reshaped = np.reshape(new_matrix, [func.shape[0]*func.shape[1]*func.shape[2], func.shape[3]-5])
+gm_full_indices = np.flatnonzero(gm_reshaped)
+gm_full_mask = np.zeros_like(gm_reshaped, dtype=bool)
+gm_full_mask[gm_full_indices] = gm_valid_mask
+new_matrix_reshaped[gm_full_mask, :] = outputs_all
+new_matrix = np.reshape(new_matrix_reshaped, func_values.shape)
+ni_img = nib.Nifti1Image(new_matrix, affine=np.eye(4))
+nib.save(ni_img, os.path.join(filepath_out, 'denoised_func.nii.gz'))
+```
