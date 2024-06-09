@@ -199,4 +199,4 @@ nib.save(ni_img, os.path.join(filepath_out, 'denoised_func.nii.gz'))
 ```
 
 ### Running time
-The running time of the demo on one participant takes around 10 minutes. 
+The running time of the demo on one participant takes around 10 minutes using 8 cpu cores and 1 gpus. 
