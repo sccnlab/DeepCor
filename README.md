@@ -197,3 +197,6 @@ new_matrix = np.reshape(new_matrix_reshaped, func_values.shape)
 ni_img = nib.Nifti1Image(new_matrix, affine=np.eye(4))
 nib.save(ni_img, os.path.join(filepath_out, 'denoised_func.nii.gz'))
 ```
+
+### Running time
+The running time of the demo on one participant takes around 10 minutes. 
