@@ -18,8 +18,8 @@ The example code is prototyped and documented in the Jupyter Notebook.
 ## Installation Guide
 Here is the command to install packages into a python environment or a conda envrionemnt:
 ```
-git clone https://github.com/sccnlab/DeepCor/tree/main
-cd DeepCor/DeepCor_package/
+git clone https://github.com/sccnlab/DeepCor.git
+cd ./DeepCor/DeepCor_package/
 pip install --user .
 ```
 The installation takes less than three minutes.
