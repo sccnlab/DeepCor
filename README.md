@@ -36,7 +36,7 @@ To run the [Realistic_data_simulation](./Analysis/Realistic_data_simulation/) ju
 
 The [task_fMRI_analyses](./Analysis/task_fMRI_analyses/) contains the code for running the analysis on the task fMRI data. 
 
-The [functional_connectivity_analysis](./Analysis/functional_connectivity_analysis/) is ran on 200 participants from ABIDE I dataset ((http ://fcon1000.projects.nitrc.org/) and the data are preprocessed. For each participant, the anatomical maps, fmri images, as well as probability maps of gm, wm, and csf are required. Moreover, the network maps from the following website (https://github.com/ThomasYeoLab/CBIG/blob/master/stable_projects/brain_parcellation/Yeo2011_fcMRI_clustering/1000subjects_reference/Yeo_JNeurophysiol11_SplitLabels/MNI152/Centroid_coordinates/Yeo2011_7Networks_N1000.split_components.FSL_MNI152_2mm.Centroid_RAS.csv) are required to identify regions.
+The [Functional_connectivity_analysis](./Analysis/Functional_connectivity_analysis/) is ran on 200 participants from ABIDE I dataset ((http ://fcon1000.projects.nitrc.org/) and the data are preprocessed. For each participant, the anatomical maps, fmri images, as well as probability maps of gm, wm, and csf are required. Moreover, the network maps from the following website (https://github.com/ThomasYeoLab/CBIG/blob/master/stable_projects/brain_parcellation/Yeo2011_fcMRI_clustering/1000subjects_reference/Yeo_JNeurophysiol11_SplitLabels/MNI152/Centroid_coordinates/Yeo2011_7Networks_N1000.split_components.FSL_MNI152_2mm.Centroid_RAS.csv) are required to identify regions.
 
 ### Running time
 The running time of the tutorial on one participant takes around 10 minutes using 8 cpu cores and 1 gpus. 
