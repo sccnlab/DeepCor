@@ -25,10 +25,10 @@ pip install --user .
 The installation takes less than three minutes.
 
 ## Tutorial 
-There is a tutorial in [DeepCor Tutorial](./DeepCor_package/tutorial/tutorial.ipynb) that users can follow to install DeepCor and run on either simulated dataset we provided or the real datasets they prepared.
+There is a tutorial in [DeepCor Tutorial](./DeepCor_pkg/tutorial/tutorial.ipynb) that users can follow to install DeepCor and run on either simulated dataset we provided or the real datasets they prepared.
 
 ## Reproduction Instructions
-The reproduction code are now in the `./Analysis` folder.
+The reproduction code are now in the [Analysis](./Analysis/) folder.
 
 Running the jupyter notebook under the folder `./Analysis/Simple_simulated_dataset` will simulate the dataset using the trigometric functions and reproduce the training results.
 
