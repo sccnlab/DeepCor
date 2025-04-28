@@ -1,0 +1,5 @@
+nibabel>=3.2.0 
+numpy>=1.21.5
+matplotlib>=3.5.1
+scikit-learn>=1.2.2
+torch>=1.11.1

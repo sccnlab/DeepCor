@@ -1,5 +1,5 @@
 # DeepCor: Denoising fMRI Data with Contrastive Autoencoders
-This directory contains the source code for the following preprint: DeepCor: Denoising fMRI Data with Contrastive Autoencoders (https://www.biorxiv.org/content/10.1101/2023.10.31.565011v1).
+This directory contains the source code for the following article: DeepCor: Denoising fMRI Data with Contrastive Autoencoders. (preprint available at https://www.biorxiv.org/content/10.1101/2023.10.31.565011v1).
 
 ## System Requirements
 ### Hardware Requirements

@@ -1,1 +1,0 @@
-The source code of DeNN part comes from https://github.com/CCLRCBH-BIC/DeNN.git, which is the repository of the paper "Yang et al., (2020) A robust deep neural network for denoising task-based fMRI data: An application to working memory and episodic memory. Medical Image Analysis, https://doi.org/10.1016/j.media.2019.101622."
